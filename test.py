@@ -2,13 +2,8 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 import numpy as np
-from traitlets import default
-
-
 from hashrateindex import API
 from resolvers import RESOLVERS
-
-
 
 def display(resolved):
     for i in resolved:
@@ -43,69 +38,18 @@ def displayChart(resolved):
                 dct[key] = outstr
                 value = outstr
     df = pd.DataFrame(resolved)
-    # dfList = list(df.columns)
-    # dfList.remove("timestamp")
-    # for col_name in dfList:
-    #     val = list(df[col_name].to_list())
-    # chart_data = pd.DataFrame(val,columns=dfList)
-
-    # st.line_chart(chart_data)
-    if selectedFunction == "Network Difficulty" or selectedFunction == "ASIC Price Index":
+    
+    if selectedFunction == "Bitcoin Overview":
+        
+    elif selectedFunction == "Network Difficulty" or selectedFunction == "ASIC Price Index":
         df = df.melt('time', var_name = "Columns", value_name = "Value")
         st.write(df)
-        chart = alt.Chart(df).mark_line().encode(x = 'time', y = 'Value', color = 'Data')
+        chart = alt.Chart(df).mark_line().encode(x = 'time:T', y = 'Value:Q', color = 'Data:N')
     else:
         df = df.melt('timestamp', var_name = "Columns", value_name = "Value")
         st.write(df)
         chart = alt.Chart(df).mark_line().encode(x = 'timestamp:T', y = 'Value:Q', color = 'Data:N')
     st.altair_chart(chart, use_container_width=False)
-
-
-
-# def switchFunc(choice):
-#     match choice:
-#         case 0: 
-#             resp = API.get_bitcoin_overview()
-#             resolved = RESOLVERS.resolve_get_bitcoin_overview(resp)
-            
-#         case 1:
-#             duration  = input("Enter Duration of data required: ")
-#             currency = input("Enter currency to display data in: ")
-#             resp = API.get_hashprice(duration, currency)
-#             resolved = RESOLVERS.resolve_get_hashprice(resp)
-          
-#         case 2:
-#             duration  = input("Enter Duration of data required: ")
-#             resp = API.get_network_hashrate(duration)
-#             resolved = RESOLVERS.resolve_get_network_hashrate(resp)
-        
-#         case 3:
-#             duration  = input("Enter Duration of data required: ")
-#             resp = API.get_network_difficulty(duration)
-#             resolved = RESOLVERS.resolve_get_network_difficulty(resp)
-           
-#         case 4:
-#             duration  = input("Enter Duration of data required: ")
-#             resp = API.get_ohlc_prices(duration)
-#             resolved = RESOLVERS.resolve_get_ohlc_prices(resp)
-
-#         case 5:
-#             duration  = input("Enter Duration of data required: ")
-#             currency = input("Enter currency to display data in: ")
-#             resp = API.get_asic_price_index(duration,currency)
-#             resolved = RESOLVERS.resolve_get_asic_price_index(resp)
-#     display(resolved)
-
-# print ("Choose Action: ")
-# print ("0 - Bitcoin Overview")
-# print ("1 - Hash Price")
-# print ("2 - Network Hash Rate")
-# print ("3 - Network Difficulty")
-# print ("4 - OHLC Prices")
-# print ("5 - ASIC Price Index")
-# chooseFunc = int(input("Enter your choice: "))
-# print(chooseFunc)
-# switchFunc(chooseFunc)
 
 def matchAction(selectedFunction):
     match selectedFunction:
@@ -129,8 +73,6 @@ def matchAction(selectedFunction):
             resolved = RESOLVERS.resolve_get_asic_price_index(resp)
     #display(resolved)
     displayChart(resolved)
-
-
 
 st.title("Bitcoin Mining Dashboard")
 st.header("Filters")
