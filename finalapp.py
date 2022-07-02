@@ -1,5 +1,4 @@
 from datetime import datetime
-from turtle import onclick
 import streamlit as st
 import pandas as pd
 
@@ -214,16 +213,16 @@ if st.sidebar.button('Show Data'):
     with st.expander('Raw Data'):
         st.dataframe(df)
 
-    def convert_df(df):
+    def convert_csv(df):
         # IMPORTANT: Cache the conversion to prevent computation on every rerun
         return df.to_csv().encode('utf-8')
 
-    csv = convert_df(df)
+    csv = convert_csv(df)
 
     st.sidebar.download_button(
         label="Download data",
         data=csv,
-        file_name='BitcoinData.csv',
+        file_name='Bitcoin_Data.csv',
         mime='text/csv',
-        help='Data available as a CSV file'
+        help = "Download the data in CSV format"
     )
